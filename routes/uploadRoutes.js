@@ -3,7 +3,16 @@ import multer from "multer";
 import path from "path";
 import { protect } from "../middleware/authMiddleware.js";
 
+import fs from "fs";
+
+
 const router = express.Router();
+
+const uploadDir = "uploads";
+
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+}
 
 const storage = multer.diskStorage({
     destination(req, file, cb) {
@@ -53,7 +62,7 @@ router.post(
         }
 
         res.json({
-            imageUrl: `http://localhost:5000/uploads/${req.file.filename}`,
+            imageUrl: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
         });
     }
 );
@@ -70,7 +79,7 @@ router.post(
         }
 
         res.json({
-            imageUrl: `http://localhost:5000/uploads/${req.file.filename}`,
+            imageUrl: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
         });
     }
 );
@@ -87,7 +96,7 @@ router.post(
         }
 
         res.json({
-            fileUrl: `http://localhost:5000/uploads/${req.file.filename}`,
+            fileUrl: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
             fileName: req.file.originalname,
             fileType: req.file.mimetype,
             fileSize: req.file.size,
