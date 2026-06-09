@@ -1,10 +1,8 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
-import { protect } from "../middleware/authMiddleware.js";
-
 import fs from "fs";
-
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -14,9 +12,13 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
 
+const getBaseUrl = (req) => {
+    return process.env.BACKEND_URL || `${req.protocol}://${req.get("host")}`;
+};
+
 const storage = multer.diskStorage({
     destination(req, file, cb) {
-        cb(null, "uploads/");
+        cb(null, uploadDir);
     },
 
     filename(req, file, cb) {
@@ -30,15 +32,21 @@ const storage = multer.diskStorage({
 
 const fileFilter = (req, file, cb) => {
     const allowedTypes = /jpg|jpeg|png|webp|pdf|doc|docx|ppt|pptx|zip/;
+
     const extname = allowedTypes.test(
         path.extname(file.originalname).toLowerCase()
     );
+
     const mimetype = allowedTypes.test(file.mimetype);
 
     if (extname && mimetype) {
         cb(null, true);
     } else {
-        cb(new Error("Only images, PDFs, Word, PowerPoint, and ZIP files are allowed"));
+        cb(
+            new Error(
+                "Only images, PDFs, Word, PowerPoint, and ZIP files are allowed"
+            )
+        );
     }
 };
 
@@ -62,7 +70,7 @@ router.post(
         }
 
         res.json({
-            imageUrl: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
+            imageUrl: `${getBaseUrl(req)}/uploads/${req.file.filename}`,
         });
     }
 );
@@ -79,7 +87,7 @@ router.post(
         }
 
         res.json({
-            imageUrl: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
+            imageUrl: `${getBaseUrl(req)}/uploads/${req.file.filename}`,
         });
     }
 );
@@ -96,7 +104,7 @@ router.post(
         }
 
         res.json({
-            fileUrl: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
+            fileUrl: `${getBaseUrl(req)}/uploads/${req.file.filename}`,
             fileName: req.file.originalname,
             fileType: req.file.mimetype,
             fileSize: req.file.size,
