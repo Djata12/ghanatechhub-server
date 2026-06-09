@@ -90,7 +90,6 @@ router.get("/search/mentions", protect, async (req, res) => {
         const query = req.query.q || "";
 
         const users = await User.find({
-            _id: { $ne: req.user._id },
             $or: [
                 { name: { $regex: query, $options: "i" } },
                 { username: { $regex: query, $options: "i" } },
