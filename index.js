@@ -17,6 +17,7 @@ import messageRoutes from "./routes/messageRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
+import supportRoutes from "./routes/supportRoutes.js";
 
 dotenv.config();
 
@@ -132,6 +133,8 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
+app.use("/api/support", supportRoutes);
+
 
 // TEST ROUTE
 app.get("/", (req, res) => {
