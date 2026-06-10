@@ -97,4 +97,12 @@ router.post(
     }
 );
 
+router.use((error, req, res, next) => {
+    console.error("Upload error:", error);
+
+    res.status(500).json({
+        message: error.message || "Image upload failed",
+    });
+});
+
 export default router;
