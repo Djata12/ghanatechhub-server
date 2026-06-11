@@ -55,7 +55,7 @@ router.post(
         }
 
         res.json({
-            imageUrl: req.file.path,
+            imageUrl: req.file.path || req.file.secure_url,
         });
     }
 );
@@ -72,7 +72,7 @@ router.post(
         }
 
         res.json({
-            imageUrl: req.file.path,
+            imageUrl: req.file.path || req.file.secure_url,
         });
     }
 );
@@ -89,7 +89,7 @@ router.post(
         }
 
         res.json({
-            fileUrl: req.file.path,
+            fileUrl: req.file.path || req.file.secure_url,
             fileName: req.file.originalname,
             fileType: req.file.mimetype,
             fileSize: req.file.size,
@@ -101,7 +101,7 @@ router.use((error, req, res, next) => {
     console.error("Upload error:", error);
 
     res.status(500).json({
-        message: error.message || "Image upload failed",
+        message: error.message || "Upload failed",
     });
 });
 
